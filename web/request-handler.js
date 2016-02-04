@@ -12,9 +12,7 @@ var collectData = function(request, callback) {
   });
   request.on('end', function() {
     var dataObject = JSON.parse(data);
-    var x = dataObject.url + '\n'
-    console.log('data', dataObject);
-    console.log('data.url', dataObject.url);
+    var x = dataObject.url + '\n';
     callback(x);
   });
 };
@@ -36,9 +34,6 @@ exports.handleRequest = function(request, response) {
 
   if (request.method === 'GET') {
     var pathBegin = pathname.slice(1, 4);
-    console.log('pathBegin', pathBegin);
-    console.log('pathname', pathname);
-
     if (pathname === '/' || pathname === '/public') {
       fs.readFile(path.join(__dirname, 'public/index.html'), function(err, html) {
         if (err) {
@@ -72,17 +67,13 @@ exports.handleRequest = function(request, response) {
   }
   if (request.method === 'POST') {
     collectData(request, function(message){
-      var fd = path.join(__dirname, '../archives/sites.txt');
-      console.log('fd', fd);
-      //console.log('data', data);
-      fs.appendFile(fd, message, 'utf8', function(err) {
+      fs.appendFile(archive.paths.list, message, 'utf8', function(err) {
         if (err) {
           console.log('the data was appended');
         }
+        helpers.sendResponse(response, message, 302);
       });
-      helpers.sendResponse(response, message, 302);
     });
   }
 
-  // response.end(archive.paths.list);
 };
