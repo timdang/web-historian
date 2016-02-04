@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var reqHand = require('../web/request-handler.js');
+var http = require('http');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -63,11 +64,33 @@ exports.addUrlToList = function(url, callback) {
 exports.isUrlArchived = function(url, callback) {
   var result = true;
   fs.readFile(this.paths.archivedSites + url, function(err) {
-    if(err){
+    if (err) {
       result = false;
     }
     callback(result);
-  })
+  });
 };
 
-exports.downloadUrls = function() {};
+exports.downloadUrls = function(array) {
+
+  var arch = path.join(__dirname, '../archives/sites');
+
+  array.forEach(function(url) {
+    var data = '';
+    var formattedUrl = "http://" + url;
+
+    return http.get(formattedUrl, function(response) {
+      response.on('data', function(chunk) {
+        data += chunk;
+      });
+      response.on('end', function() {
+        //write data to that folder
+        fs.writeFile(arch + "/" + url, data, function(err) {
+          if (err) {
+            console.log('errrrr');
+          }
+        });
+      });
+    });
+  });
+};
