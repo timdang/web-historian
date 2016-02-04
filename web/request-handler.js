@@ -17,11 +17,8 @@ var collectData = function(request, callback) {
   });
 };
 
-var writeToFile = function(data) {
-  var fd = path.join(__dirname, '../archives/sites.txt');
-  // console.log('fd', fd);
-  //console.log('data', data);
-  fs.appendFile(fd, data, function(err) {
+exports.writeToFile = function(data) {
+  fs.appendFile(archive.paths.list, data, function(err) {
     if (err) {
       console.log('the data was appended');
     }

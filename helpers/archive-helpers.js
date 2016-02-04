@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var reqHand = require('../web/request-handler.js');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -37,16 +38,25 @@ exports.readListOfUrls = function(callback) {
 
 exports.isUrlInList = function(url, callback) {
   this.readListOfUrls(function(x) {
+    var result = false;
     x.forEach(function(value) {
-      callback(value);
+      if (url === value) {
+        result = true;
+      }
     });
+    callback(result);
   });
 };
 
 exports.addUrlToList = function(url, callback) {
-  this.isUrlInList(url, function(value){
-    if(value === url){callback(url)}
-  }){})
+  //check if it's in the list already
+  this.isUrlInList(url, function(value) {
+    //if it's not in the list
+    if (callback(value)) {
+      //add it to the list
+      reqHand.writeToFile(url);
+    }
+  });
 
 };
 
