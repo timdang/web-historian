@@ -60,6 +60,14 @@ exports.addUrlToList = function(url, callback) {
 
 };
 
-exports.isUrlArchived = function() {};
+exports.isUrlArchived = function(url, callback) {
+  var result = true;
+  fs.readFile(this.paths.archivedSites + url, function(err) {
+    if(err){
+      result = false;
+    }
+    callback(result);
+  })
+};
 
 exports.downloadUrls = function() {};
