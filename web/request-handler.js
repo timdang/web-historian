@@ -11,8 +11,8 @@ var collectData = function(request, callback) {
     data += chunk;
   });
   request.on('end', function() {
-    var dataObject = JSON.parse(data);
-    var x = dataObject.url + '\n';
+    console.log('data', data);
+    var x = data.slice(4, data.length) + '\n';
     callback(x);
   });
 };
@@ -26,7 +26,7 @@ exports.writeToFile = function(data) {
 };
 
 exports.handleRequest = function(request, response) {
-//  console.log('request url is ', request.url);
+  //  console.log('request url is ', request.url);
   var pathname = url.parse(request.url).pathname;
 
   if (request.method === 'GET') {
@@ -63,10 +63,10 @@ exports.handleRequest = function(request, response) {
     }
   }
   if (request.method === 'POST') {
-    collectData(request, function(message){
+    collectData(request, function(message) {
       fs.appendFile(archive.paths.list, message, 'utf8', function(err) {
         if (err) {
-          console.log('the data was appended');
+          console.log('the data was not appended');
         }
         helpers.sendResponse(response, message, 302);
       });
